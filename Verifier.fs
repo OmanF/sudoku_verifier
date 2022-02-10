@@ -25,7 +25,15 @@ let parseInput (input: string) =
     |> Array.map (fun arr -> Array.map (fun elem -> int elem - int '0') arr) // Convert the input string to array-of-arrays, each 9 elements longs, all `int`s. The `- int '0'` is to get the true value of the **char** and **not** its ASCII value!
     |> array2D
 
-let rec inputColumns (input: int array array) = 0 // TODO: Implement!
+let solutionRows (parsedInput: int [,]) =
+    [| for i in 0 .. (parsedInput.GetLength(0) - 1) -> parsedInput[i, *] |]
+
+let solutionColumns (parsedInput: int[,]) =
+    [| for i in 0 .. (parsedInput.GetLength(1) - 1) -> parsedInput[*, i] |]
+
+let solutionBoxes solutionRows =
+    let interim = solutionRows |> Array.collect (Array.chunkBySize 3)
+    // TODO: Implment
 
 let validateAllEntities (entities: int array array) (entityType: EntityType) =
     Array.map isValidEntity entities
