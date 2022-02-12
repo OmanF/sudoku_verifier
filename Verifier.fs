@@ -1,7 +1,9 @@
 module Verifier
 
+// I like the Ruby-esque way of naming predicates ending with "?"
+// In F#, though, you can't name variable ending with "?" by default, but you can use the double-backtick notation, ``valName``
+// to define any arbitrary string as the variable name
 let ``isValidEntity?`` entity =
-    // A valid sudoku entity (i.e., row, column or 3x3 cube) **must** contain all numbers 1 through 9, inclusive
     let validSet = set [ 1; 2; 3; 4; 5; 6; 7; 8; 9 ]
     let entitySet = set entity
 
@@ -20,10 +22,16 @@ let getRows (parsedInput: int [,]) =
 let getColumns (parsedInput: int[,]) =
     [| for i in 0 .. (parsedInput.GetLength(1) - 1) -> parsedInput[*, i] |]
 
+// Calculating boxes validity is redundant: if a row/column is invalid, by definition it invalidates the box in which contains the wrong number!
 // let getBoxes solutionRows =
 //     let chunkSize = 3 // No "magic numbers" here. 3 due to the boxes each being 3 X 3 in size
 //     let interim = solutionRows |> Array.collect (Array.chunkBySize chunkSize)
-//     [| for i in 0 .. ((Array.length interim / chunkSize) - 1) -> interim[0 + (chunkSize * i)]|]
+//     seq { for i in 0 .. 2 ->
+//             seq { for j in 0 .. ((Array.length interim / chunkSize) - 1) ->
+//                     interim[i + (chunkSize * j)]}}
+//     |> Seq.map Seq.toArray // Convert the inner seqs to arrays
+//     |> Seq.collect id // Collect all inner arrays to one external seq-of-arrays
+//     |> Seq.toArray // Convert to the final value of array-of-arrays
 
 let validateAllEntities (entities: int array array) =
     Array.map ``isValidEntity?`` entities
